@@ -4,6 +4,7 @@ namespace ginkgo\iflytek;
 
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\helpers\Json;
 use yii\helpers\FileHelper;
 use yii\httpclient\Client;
 use yii\web\ServerErrorHttpException;
@@ -30,7 +31,7 @@ class Iflytek extends \yii\base\Component
     {
         $url = 'http://api.xfyun.cn/v1/service/v1/tts';
 
-        $params = base64_encode([
+        $params = base64_encode(Json::encode([
             'auf' => 'audio/L16;rate=16000',
             'aue' => 'lame',
             'voice_name' => 'xiaoyan',
@@ -39,14 +40,14 @@ class Iflytek extends \yii\base\Component
             'pitch' => '50',
             'engine_type' => 'intp65',
             'text_type' => 'text'
-        ]);
+        ]));
         $current = time();
 
         $client = new Client();
         $response = $client->createRequest()
             ->setMethod('POST')
             ->setUrl($url)
-            ->setData(['text' => urlencode($text)])
+            ->setData(['text' => $text])
             ->addHeaders([
                 'X-Appid' => $this->appId,
                 'X-CurTime' => $current,
@@ -59,7 +60,7 @@ class Iflytek extends \yii\base\Component
             $sid = $response->getHeaders()->get('sid');
             $dir = '/audios/';
             $file = $sid . '.mp3';
-            $path = Yii::getAlias('@webroot' . $dir)
+            $path = Yii::getAlias('@webroot' . $dir);
             FileHelper::createDirectory($path);
             file_put_contents($path . $file, $response->getContent());
             
