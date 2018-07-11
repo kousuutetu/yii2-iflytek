@@ -27,7 +27,7 @@ class Iflytek extends \yii\base\Component
         }
     }
 
-    public function tts($text)
+    public function tts($text, $name)
     {
         $url = 'http://api.xfyun.cn/v1/service/v1/tts';
 
@@ -57,10 +57,8 @@ class Iflytek extends \yii\base\Component
             ->send();
 
         if ('audio/mpeg' == $response->getHeaders()->get('Content-Type')) {
-            $sid = $response->getHeaders()->get('sid');
-
             $dir = '/audios/';
-            $file = $sid . '.mp3';
+            $file = $name . '.mp3';
             $path = Yii::getAlias('@webroot' . $dir);
 
             FileHelper::createDirectory($path);
