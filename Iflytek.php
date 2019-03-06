@@ -27,7 +27,7 @@ class Iflytek extends \yii\base\Component
         }
     }
 
-    public function tts($text, $name)
+    public function tts($text)
     {
         $url = 'http://api.xfyun.cn/v1/service/v1/tts';
 
