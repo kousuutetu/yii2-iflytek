@@ -57,14 +57,7 @@ class Iflytek extends \yii\base\Component
             ->send();
 
         if ('audio/mpeg' == $response->getHeaders()->get('Content-Type')) {
-            $dir = '/audios/';
-            $file = $name . '.mp3';
-            $path = Yii::getAlias('@webroot' . $dir);
-
-            FileHelper::createDirectory($path);
-            file_put_contents($path . $file, $response->getContent());
-            
-            return ['status' => 200, 'url' => $dir . $file];
+            return ['status' => 200, 'content' => $response->getContent()];
         } else {
             return ['status' => 500];
         }
